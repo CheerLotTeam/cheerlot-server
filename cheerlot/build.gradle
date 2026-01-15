@@ -24,6 +24,7 @@ dependencies {
 
 	// Notion SDK
 	implementation 'com.github.seratch:notion-sdk-jvm-core:1.11.1'
+	implementation 'com.github.seratch:notion-sdk-jvm-okhttp5:1.11.1'
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -32,7 +33,7 @@ dependencies {
 	// .env 파일 지원
 	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
