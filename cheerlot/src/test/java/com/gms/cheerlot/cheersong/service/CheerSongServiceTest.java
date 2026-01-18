@@ -2,47 +2,47 @@ package com.gms.cheerlot.cheersong.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CheerSongServiceTest {
 
-    @TempDir
-    Path tempDir;
-
     @Test
-    @DisplayName("파일명으로 오디오 파일을 조회한다")
-    void getAudioFile() throws IOException {
+    @DisplayName("파일명으로 오디오 URL을 생성한다")
+    void getAudioUrl() {
         // given
-        Path audioFile = tempDir.resolve("lg10.mp3");
-        Files.createFile(audioFile);
-
-        CheerSongService cheerSongService = new CheerSongService(tempDir.toString());
+        CheerSongService cheerSongService = new CheerSongService("https://example.r2.dev");
 
         // when
-        Resource resource = cheerSongService.getAudioFile("lg10.mp3");
+        String audioUrl = cheerSongService.getAudioUrl("lg10.mp3");
 
         // then
-        assertThat(resource.exists()).isTrue();
-        assertThat(resource.getFilename()).isEqualTo("lg10.mp3");
+        assertThat(audioUrl).isEqualTo("https://example.r2.dev/lg10.mp3");
     }
 
     @Test
-    @DisplayName("존재하지 않는 파일을 조회하면 예외가 발생한다")
-    void getAudioFile_notFound() {
+    @DisplayName("파일명이 null이면 null을 반환한다")
+    void getAudioUrl_nullFileName() {
         // given
-        CheerSongService cheerSongService = new CheerSongService(tempDir.toString());
+        CheerSongService cheerSongService = new CheerSongService("https://example.r2.dev");
 
-        // when & then
-        assertThatThrownBy(() -> cheerSongService.getAudioFile("unknown.mp3"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("파일을 찾을 수 없습니다");
+        // when
+        String audioUrl = cheerSongService.getAudioUrl(null);
+
+        // then
+        assertThat(audioUrl).isNull();
+    }
+
+    @Test
+    @DisplayName("파일명이 빈 문자열이면 null을 반환한다")
+    void getAudioUrl_blankFileName() {
+        // given
+        CheerSongService cheerSongService = new CheerSongService("https://example.r2.dev");
+
+        // when
+        String audioUrl = cheerSongService.getAudioUrl("  ");
+
+        // then
+        assertThat(audioUrl).isNull();
     }
 }

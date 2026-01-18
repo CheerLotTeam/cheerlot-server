@@ -2,6 +2,7 @@ package com.gms.cheerlot.lineup.service;
 
 import com.gms.cheerlot.cheersong.domain.CheerSong;
 import com.gms.cheerlot.cheersong.repository.CheerSongRepository;
+import com.gms.cheerlot.cheersong.service.CheerSongService;
 import com.gms.cheerlot.lineup.domain.Player;
 import com.gms.cheerlot.lineup.dto.PlayerListResponse;
 import com.gms.cheerlot.lineup.dto.PlayerResponse;
@@ -28,6 +29,9 @@ class PlayerServiceTest {
 
     @Mock
     private CheerSongRepository cheerSongRepository;
+
+    @Mock
+    private CheerSongService cheerSongService;
 
     @InjectMocks
     private PlayerService playerService;
@@ -85,6 +89,7 @@ class PlayerServiceTest {
 
         when(playerRepository.findByPlayerCode("lg10")).thenReturn(Optional.of(player));
         when(cheerSongRepository.findByPlayerCode("lg10")).thenReturn(List.of(cheerSong));
+        when(cheerSongService.getAudioUrl("lg10.mp3")).thenReturn("https://example.r2.dev/lg10.mp3");
 
         // when
         PlayerResponse response = playerService.getPlayer("lg10");
@@ -94,6 +99,7 @@ class PlayerServiceTest {
         assertThat(response.name()).isEqualTo("이민호");
         assertThat(response.cheerSongs()).hasSize(1);
         assertThat(response.cheerSongs().get(0).title()).isEqualTo("이민호 응원가");
+        assertThat(response.cheerSongs().get(0).audioUrl()).isEqualTo("https://example.r2.dev/lg10.mp3");
     }
 
     @Test

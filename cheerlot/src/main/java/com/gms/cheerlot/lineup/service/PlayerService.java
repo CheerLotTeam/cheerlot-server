@@ -2,6 +2,7 @@ package com.gms.cheerlot.lineup.service;
 
 import com.gms.cheerlot.cheersong.dto.CheerSongInfo;
 import com.gms.cheerlot.cheersong.repository.CheerSongRepository;
+import com.gms.cheerlot.cheersong.service.CheerSongService;
 import com.gms.cheerlot.lineup.domain.Player;
 import com.gms.cheerlot.lineup.dto.PlayerListResponse;
 import com.gms.cheerlot.lineup.dto.PlayerResponse;
@@ -18,6 +19,7 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
     private final CheerSongRepository cheerSongRepository;
+    private final CheerSongService cheerSongService;
 
     public PlayerListResponse getPlayers(String teamCode) {
         List<PlayerResponse> players = playerRepository.findByTeamCode(teamCode).stream()
@@ -45,7 +47,7 @@ public class PlayerService {
 
     private PlayerResponse toPlayerResponse(Player player) {
         List<CheerSongInfo> cheerSongs = cheerSongRepository.findByPlayerCode(player.getPlayerCode()).stream()
-                .map(cs -> new CheerSongInfo(cs.getTitle(), cs.getLyrics(), cs.getAudioFileName()))
+                .map(cs -> new CheerSongInfo(cs.getTitle(), cs.getLyrics(), cheerSongService.getAudioUrl(cs.getAudioFileName())))
                 .toList();
 
         return new PlayerResponse(
