@@ -1,0 +1,30 @@
+# Build outputs
+build/
+out/
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Test results
+test-results/
+
+# OS
+.DS_Store
+Thumbs.db
