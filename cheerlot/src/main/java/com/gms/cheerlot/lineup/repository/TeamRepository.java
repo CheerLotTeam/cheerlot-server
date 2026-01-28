@@ -214,6 +214,9 @@ public class TeamRepository {
         if (start == null) {
             return null;
         }
+        if (start.length() == 10) {
+            return LocalDate.parse(start).atStartOfDay();
+        }
         return OffsetDateTime.parse(start).toLocalDateTime();
     }
 }
