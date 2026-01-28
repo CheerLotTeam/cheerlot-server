@@ -124,7 +124,7 @@ public class PlayerRepository {
                 .position(getText(props, "position"))
                 .batThrow(getText(props, "bat_throw"))
                 .battingOrder(getNumber(props, "batting_order"))
-                .isStarter(getCheckbox(props, "is_starter"))
+                .starter(getCheckbox(props, "is_starter"))
                 .build();
     }
 
