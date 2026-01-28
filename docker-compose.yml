@@ -1,0 +1,47 @@
+services:
+  app:
+    build:
+      context: ./cheerlot
+      dockerfile: Dockerfile
+    container_name: cheerlot-server
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NOTION_API_KEY=${NOTION_API_KEY}
+      - NOTION_PLAYER_DB_ID=${NOTION_PLAYER_DB_ID}
+      - NOTION_TEAM_DB_ID=${NOTION_TEAM_DB_ID}
+      - NOTION_CHEERSONG_DB_ID=${NOTION_CHEERSONG_DB_ID}
+      - CHEERSONG_AUDIO_BASE_URL=${CHEERSONG_AUDIO_BASE_URL}
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - cheerlot-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: cheerlot-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - cheerlot-network
+
+networks:
+  cheerlot-network:
+    driver: bridge
+
+volumes:
+  redis-data:
