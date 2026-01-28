@@ -172,7 +172,7 @@ public class TeamRepository {
                 .opponentTeamCode(getText(props, "opponent_team_code"))
                 .starterPitcherName(getText(props, "starter_pitcher_name"))
                 .lastGameDate(getDate(props, "last_game_date"))
-                .isSeasonEnded(getCheckbox(props, "is_season_ended"))
+                .seasonEnded(getCheckbox(props, "is_season_ended"))
                 .updatedAt(getDateTime(props, "updated_at"))
                 .build();
     }
