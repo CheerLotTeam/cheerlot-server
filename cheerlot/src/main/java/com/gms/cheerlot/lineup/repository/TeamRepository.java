@@ -105,6 +105,40 @@ public class TeamRepository {
         notionClient.updatePage(request);
     }
 
+    public void incrementPlayersVersion(String teamCode) {
+        String pageId = findPageIdByTeamCode(teamCode);
+        if (pageId == null) {
+            return;
+        }
+
+        int currentVersion = findByTeamCode(teamCode)
+                .map(Team::getPlayersVersion)
+                .orElse(0);
+
+        Map<String, PageProperty> properties = new HashMap<>();
+        properties.put("players_version", createNumberProperty(currentVersion + 1));
+
+        UpdatePageRequest request = new UpdatePageRequest(pageId, properties);
+        notionClient.updatePage(request);
+    }
+
+    public void incrementLineupVersion(String teamCode) {
+        String pageId = findPageIdByTeamCode(teamCode);
+        if (pageId == null) {
+            return;
+        }
+
+        int currentVersion = findByTeamCode(teamCode)
+                .map(Team::getLineupVersion)
+                .orElse(0);
+
+        Map<String, PageProperty> properties = new HashMap<>();
+        properties.put("lineup_version", createNumberProperty(currentVersion + 1));
+
+        UpdatePageRequest request = new UpdatePageRequest(pageId, properties);
+        notionClient.updatePage(request);
+    }
+
     public void updateLastGameDate(String teamCode, LocalDate lastGameDate) {
         String pageId = findPageIdByTeamCode(teamCode);
         if (pageId == null) {
@@ -135,6 +169,12 @@ public class TeamRepository {
         text.setContent(value);
         richText.setText(text);
         prop.setRichText(List.of(richText));
+        return prop;
+    }
+
+    private PageProperty createNumberProperty(int value) {
+        PageProperty prop = new PageProperty();
+        prop.setNumber(value);
         return prop;
     }
 
@@ -173,6 +213,8 @@ public class TeamRepository {
                 .starterPitcherName(getText(props, "starter_pitcher_name"))
                 .lastGameDate(getDate(props, "last_game_date"))
                 .seasonEnded(getCheckbox(props, "is_season_ended"))
+                .playersVersion(getNumber(props, "players_version"))
+                .lineupVersion(getNumber(props, "lineup_version"))
                 .updatedAt(getDateTime(props, "updated_at"))
                 .build();
     }
@@ -203,6 +245,14 @@ public class TeamRepository {
         }
         String start = prop.getDate().getStart();
         return start != null ? LocalDate.parse(start) : null;
+    }
+
+    private int getNumber(Map<String, PageProperty> props, String key) {
+        PageProperty prop = props.get(key);
+        if (prop == null || prop.getNumber() == null) {
+            return 0;
+        }
+        return prop.getNumber().intValue();
     }
 
     private LocalDateTime getDateTime(Map<String, PageProperty> props, String key) {
