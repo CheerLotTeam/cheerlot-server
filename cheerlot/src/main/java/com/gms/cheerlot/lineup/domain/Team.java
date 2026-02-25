@@ -21,5 +21,7 @@ public class Team {
     private String starterPitcherName;
     private LocalDate lastGameDate;
     private boolean seasonEnded;
+    private int playersVersion;
+    private int lineupVersion;
     private LocalDateTime updatedAt;
 }

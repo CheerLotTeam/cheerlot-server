@@ -1,6 +1,7 @@
 package com.gms.cheerlot.lineup.controller;
 
 import com.gms.cheerlot.lineup.dto.TeamResponse;
+import com.gms.cheerlot.lineup.dto.TeamVersionResponse;
 import com.gms.cheerlot.lineup.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,12 @@ public class TeamController {
     @GetMapping("/{teamCode}")
     public ResponseEntity<TeamResponse> getTeam(@PathVariable String teamCode) {
         TeamResponse response = teamService.getTeam(teamCode);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{teamCode}/version")
+    public ResponseEntity<TeamVersionResponse> getTeamVersion(@PathVariable String teamCode) {
+        TeamVersionResponse response = teamService.getTeamVersion(teamCode);
         return ResponseEntity.ok(response);
     }
 }
