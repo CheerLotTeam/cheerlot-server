@@ -1,5 +1,6 @@
 package com.gms.cheerlot.lineup.repository;
 
+import com.gms.cheerlot.config.NotionPaginationHelper;
 import com.gms.cheerlot.lineup.domain.Team;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.databases.QueryResults;
@@ -40,7 +41,7 @@ class TeamRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        teamRepository = new TeamRepository(notionClient, DATABASE_ID);
+        teamRepository = new TeamRepository(notionClient, new NotionPaginationHelper(), DATABASE_ID);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.gms.cheerlot.lineup.repository;
 
+import com.gms.cheerlot.config.NotionPaginationHelper;
 import com.gms.cheerlot.lineup.domain.Team;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.databases.QueryResults;
@@ -25,18 +26,19 @@ import java.util.Optional;
 public class TeamRepository {
 
     private final NotionClient notionClient;
+    private final NotionPaginationHelper paginationHelper;
     private final String databaseId;
 
-    public TeamRepository(NotionClient notionClient, @Value("${notion.database.team-id}") String databaseId) {
+    public TeamRepository(NotionClient notionClient, NotionPaginationHelper paginationHelper, @Value("${notion.database.team-id}") String databaseId) {
         this.notionClient = notionClient;
+        this.paginationHelper = paginationHelper;
         this.databaseId = databaseId;
     }
 
     public List<Team> findAll() {
         QueryDatabaseRequest request = new QueryDatabaseRequest(databaseId);
-        QueryResults results = notionClient.queryDatabase(request);
 
-        return results.getResults().stream()
+        return paginationHelper.queryAll(notionClient, request).stream()
                 .map(this::toTeam)
                 .toList();
     }
