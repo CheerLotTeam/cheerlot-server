@@ -1,8 +1,8 @@
 package com.gms.cheerlot.lineup.service;
 
+import com.gms.cheerlot.cache.CacheDataService;
 import com.gms.cheerlot.lineup.domain.Team;
 import com.gms.cheerlot.lineup.dto.TeamResponse;
-import com.gms.cheerlot.lineup.repository.TeamRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class TeamServiceTest {
 
     @Mock
-    private TeamRepository teamRepository;
+    private CacheDataService cacheDataService;
 
     @InjectMocks
     private TeamService teamService;
@@ -37,10 +37,10 @@ class TeamServiceTest {
                 .opponentTeamCode("kt")
                 .starterPitcherName("이민호")
                 .lastGameDate(LocalDate.of(2026, 10, 12))
-                .isSeasonEnded(false)
+                .seasonEnded(false)
                 .build();
 
-        when(teamRepository.findByTeamCode("lg")).thenReturn(Optional.of(team));
+        when(cacheDataService.getTeamByCode("lg")).thenReturn(Optional.of(team));
 
         // when
         TeamResponse response = teamService.getTeam("lg");
@@ -56,7 +56,7 @@ class TeamServiceTest {
     @DisplayName("존재하지 않는 팀 코드로 조회하면 예외가 발생한다")
     void getTeam_notFound() {
         // given
-        when(teamRepository.findByTeamCode("unknown")).thenReturn(Optional.empty());
+        when(cacheDataService.getTeamByCode("unknown")).thenReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> teamService.getTeam("unknown"))
