@@ -1,5 +1,6 @@
 package com.gms.cheerlot.lineup.repository;
 
+import com.gms.cheerlot.config.NotionPaginationHelper;
 import com.gms.cheerlot.lineup.domain.Player;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.databases.QueryResults;
@@ -38,7 +39,7 @@ class PlayerRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        playerRepository = new PlayerRepository(notionClient, DATABASE_ID);
+        playerRepository = new PlayerRepository(notionClient, new NotionPaginationHelper(), DATABASE_ID);
     }
 
     @Test
@@ -48,6 +49,7 @@ class PlayerRepositoryTest {
         Page page = createMockPage("test-page-id", "lg51", "lg", "홍창기", 51, true);
         QueryResults queryResults = mock(QueryResults.class);
         when(queryResults.getResults()).thenReturn(List.of(page));
+        when(queryResults.getHasMore()).thenReturn(false);
 
         when(notionClient.queryDatabase(any(QueryDatabaseRequest.class)))
                 .thenReturn(queryResults);

@@ -1,6 +1,7 @@
 package com.gms.cheerlot.cheersong.repository;
 
 import com.gms.cheerlot.cheersong.domain.CheerSong;
+import com.gms.cheerlot.config.NotionPaginationHelper;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.databases.QueryResults;
 import notion.api.v1.model.pages.Page;
@@ -34,7 +35,7 @@ class CheerSongRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        cheerSongRepository = new CheerSongRepository(notionClient, DATABASE_ID);
+        cheerSongRepository = new CheerSongRepository(notionClient, new NotionPaginationHelper(), DATABASE_ID);
     }
 
     @Test

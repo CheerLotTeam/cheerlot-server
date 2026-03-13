@@ -1,6 +1,7 @@
 package com.gms.cheerlot.cheersong.repository;
 
 import com.gms.cheerlot.cheersong.domain.CheerSong;
+import com.gms.cheerlot.config.NotionPaginationHelper;
 import notion.api.v1.NotionClient;
 import notion.api.v1.model.databases.QueryResults;
 import notion.api.v1.model.databases.query.filter.PropertyFilter;
@@ -19,18 +20,19 @@ import java.util.Map;
 public class CheerSongRepository {
 
     private final NotionClient notionClient;
+    private final NotionPaginationHelper paginationHelper;
     private final String databaseId;
 
-    public CheerSongRepository(NotionClient notionClient, @Value("${notion.database.cheersong-id}") String databaseId) {
+    public CheerSongRepository(NotionClient notionClient, NotionPaginationHelper paginationHelper, @Value("${notion.database.cheersong-id}") String databaseId) {
         this.notionClient = notionClient;
+        this.paginationHelper = paginationHelper;
         this.databaseId = databaseId;
     }
 
     public List<CheerSong> findAll() {
         QueryDatabaseRequest request = new QueryDatabaseRequest(databaseId);
-        QueryResults results = notionClient.queryDatabase(request);
 
-        return results.getResults().stream()
+        return paginationHelper.queryAll(notionClient, request).stream()
                 .map(this::toCheerSong)
                 .toList();
     }
@@ -39,9 +41,7 @@ public class CheerSongRepository {
         QueryDatabaseRequest request = new QueryDatabaseRequest(databaseId);
         request.setFilter(createTextFilter("player_code", playerCode));
 
-        QueryResults results = notionClient.queryDatabase(request);
-
-        return results.getResults().stream()
+        return paginationHelper.queryAll(notionClient, request).stream()
                 .map(this::toCheerSong)
                 .toList();
     }

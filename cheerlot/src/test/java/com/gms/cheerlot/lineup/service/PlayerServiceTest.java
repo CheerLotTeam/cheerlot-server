@@ -1,12 +1,11 @@
 package com.gms.cheerlot.lineup.service;
 
+import com.gms.cheerlot.cache.CacheDataService;
 import com.gms.cheerlot.cheersong.domain.CheerSong;
-import com.gms.cheerlot.cheersong.repository.CheerSongRepository;
 import com.gms.cheerlot.cheersong.service.CheerSongService;
 import com.gms.cheerlot.lineup.domain.Player;
 import com.gms.cheerlot.lineup.dto.PlayerListResponse;
 import com.gms.cheerlot.lineup.dto.PlayerResponse;
-import com.gms.cheerlot.lineup.repository.PlayerRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,10 +24,7 @@ import static org.mockito.Mockito.when;
 class PlayerServiceTest {
 
     @Mock
-    private PlayerRepository playerRepository;
-
-    @Mock
-    private CheerSongRepository cheerSongRepository;
+    private CacheDataService cacheDataService;
 
     @Mock
     private CheerSongService cheerSongService;
@@ -41,8 +37,8 @@ class PlayerServiceTest {
     void getPlayers() {
         // given
         Player player = createPlayer("lg10", "lg", "이민호", 10, 1, false);
-        when(playerRepository.findByTeamCode("lg")).thenReturn(List.of(player));
-        when(cheerSongRepository.findByPlayerCode("lg10")).thenReturn(List.of());
+        when(cacheDataService.getPlayersByTeamCode("lg")).thenReturn(List.of(player));
+        when(cacheDataService.getCheerSongsByPlayerCode("lg10")).thenReturn(List.of());
 
         // when
         PlayerListResponse response = playerService.getPlayers("lg");
@@ -61,9 +57,9 @@ class PlayerServiceTest {
         Player player1 = createPlayer("lg7", "lg", "김철수", 7, 2, true);
         Player player2 = createPlayer("lg10", "lg", "이민호", 10, 1, true);
 
-        when(playerRepository.findStartersByTeamCode("lg")).thenReturn(List.of(player1, player2));
-        when(cheerSongRepository.findByPlayerCode("lg7")).thenReturn(List.of());
-        when(cheerSongRepository.findByPlayerCode("lg10")).thenReturn(List.of());
+        when(cacheDataService.getStartersByTeamCode("lg")).thenReturn(List.of(player1, player2));
+        when(cacheDataService.getCheerSongsByPlayerCode("lg7")).thenReturn(List.of());
+        when(cacheDataService.getCheerSongsByPlayerCode("lg10")).thenReturn(List.of());
 
         // when
         PlayerListResponse response = playerService.getStarterLineup("lg");
@@ -87,8 +83,8 @@ class PlayerServiceTest {
                 .audioFileName("lg10.mp3")
                 .build();
 
-        when(playerRepository.findByPlayerCode("lg10")).thenReturn(Optional.of(player));
-        when(cheerSongRepository.findByPlayerCode("lg10")).thenReturn(List.of(cheerSong));
+        when(cacheDataService.getPlayerByCode("lg10")).thenReturn(Optional.of(player));
+        when(cacheDataService.getCheerSongsByPlayerCode("lg10")).thenReturn(List.of(cheerSong));
         when(cheerSongService.getAudioUrl("lg10.mp3")).thenReturn("https://example.r2.dev/lg10.mp3");
 
         // when
@@ -106,7 +102,7 @@ class PlayerServiceTest {
     @DisplayName("존재하지 않는 선수 코드로 조회하면 예외가 발생한다")
     void getPlayer_notFound() {
         // given
-        when(playerRepository.findByPlayerCode("unknown")).thenReturn(Optional.empty());
+        when(cacheDataService.getPlayerByCode("unknown")).thenReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> playerService.getPlayer("unknown"))
@@ -124,7 +120,7 @@ class PlayerServiceTest {
                 .position("외야수")
                 .batThrow("우타좌투")
                 .battingOrder(battingOrder)
-                .isStarter(isStarter)
+                .starter(isStarter)
                 .build();
     }
 }
