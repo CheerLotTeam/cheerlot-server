@@ -69,10 +69,14 @@ public class CheerSongRepository {
         }
 
         if (prop.getRichText() != null && !prop.getRichText().isEmpty()) {
-            return prop.getRichText().get(0).getPlainText();
+            return prop.getRichText().stream()
+                    .map(PageProperty.RichText::getPlainText)
+                    .collect(java.util.stream.Collectors.joining());
         }
         if (prop.getTitle() != null && !prop.getTitle().isEmpty()) {
-            return prop.getTitle().get(0).getPlainText();
+            return prop.getTitle().stream()
+                    .map(PageProperty.RichText::getPlainText)
+                    .collect(java.util.stream.Collectors.joining());
         }
         return null;
     }
