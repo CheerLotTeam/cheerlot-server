@@ -57,7 +57,7 @@ public class CheerSongRepository {
                 .id(getNumberAsLong(props, "id"))
                 .playerCode(getText(props, "player_code"))
                 .title(getText(props, "title"))
-                .lyrics(getText(props, "lyrics"))
+                .lyrics(replaceLiteralNewlines(getText(props, "lyrics")))
                 .audioFileName(getText(props, "audio_file_name"))
                 .build();
     }
@@ -87,5 +87,12 @@ public class CheerSongRepository {
             return null;
         }
         return prop.getNumber().longValue();
+    }
+
+    private String replaceLiteralNewlines(String text) {
+        if (text == null) {
+            return null;
+        }
+        return text.replace("\\n", "\n");
     }
 }
