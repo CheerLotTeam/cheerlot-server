@@ -16,8 +16,11 @@ import java.time.LocalDateTime;
 public class Team {
     private String teamCode;
     private String teamName;
+    @Deprecated
     private boolean hasTodayGame;
+    @Deprecated
     private String opponentTeamCode;
+    @Deprecated
     private String starterPitcherName;
     private LocalDate lastGameDate;
     private boolean seasonEnded;

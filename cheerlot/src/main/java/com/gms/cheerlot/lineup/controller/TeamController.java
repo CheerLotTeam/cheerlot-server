@@ -1,5 +1,7 @@
 package com.gms.cheerlot.lineup.controller;
 
+import com.gms.cheerlot.gameschedule.dto.GameScheduleResponse;
+import com.gms.cheerlot.gameschedule.service.GameScheduleService;
 import com.gms.cheerlot.lineup.dto.TeamResponse;
 import com.gms.cheerlot.lineup.dto.TeamVersionResponse;
 import com.gms.cheerlot.lineup.service.TeamService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
 
     private final TeamService teamService;
+    private final GameScheduleService gameScheduleService;
 
     @GetMapping("/{teamCode}")
     public ResponseEntity<TeamResponse> getTeam(@PathVariable String teamCode) {
@@ -26,6 +29,12 @@ public class TeamController {
     @GetMapping("/{teamCode}/version")
     public ResponseEntity<TeamVersionResponse> getTeamVersion(@PathVariable String teamCode) {
         TeamVersionResponse response = teamService.getTeamVersion(teamCode);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{teamCode}/games")
+    public ResponseEntity<GameScheduleResponse> getRecentGames(@PathVariable String teamCode) {
+        GameScheduleResponse response = gameScheduleService.getRecentGames(teamCode);
         return ResponseEntity.ok(response);
     }
 }

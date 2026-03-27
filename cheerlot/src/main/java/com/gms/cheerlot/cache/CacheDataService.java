@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gms.cheerlot.cheersong.domain.CheerSong;
+import com.gms.cheerlot.gameschedule.domain.GameSchedule;
 import com.gms.cheerlot.lineup.domain.Player;
 import com.gms.cheerlot.lineup.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,7 @@ public class CacheDataService {
     private static final String KEY_TEAMS = "teams";
     private static final String KEY_PLAYERS = "players";
     private static final String KEY_CHEERSONGS = "cheersongs";
+    private static final String KEY_GAME_SCHEDULES_PREFIX = "game-schedules:";
 
     // ========== Team ==========
 
@@ -71,6 +75,31 @@ public class CacheDataService {
         return getCheerSongs().stream()
                 .filter(cs -> cs.getPlayerCode().equals(playerCode))
                 .toList();
+    }
+
+    // ========== GameSchedule ==========
+
+    public void saveGameSchedules(LocalDate date, List<GameSchedule> schedules) {
+        String key = KEY_GAME_SCHEDULES_PREFIX + date;
+        try {
+            String json = redisObjectMapper.writeValueAsString(schedules);
+            redisTemplate.opsForValue().set(key, json, Duration.ofDays(3));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Redis 저장 실패: " + key, e);
+        }
+    }
+
+    public List<GameSchedule> getGameSchedules(LocalDate date) {
+        String key = KEY_GAME_SCHEDULES_PREFIX + date;
+        String json = redisTemplate.opsForValue().get(key);
+        if (json == null) {
+            return List.of();
+        }
+        try {
+            return redisObjectMapper.readValue(json, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Redis 조회 실패: " + key, e);
+        }
     }
 
     // ========== Helper ==========
