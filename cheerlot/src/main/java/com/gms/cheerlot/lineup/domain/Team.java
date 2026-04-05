@@ -25,6 +25,7 @@ public class Team {
     private LocalDate lastGameDate;
     private boolean seasonEnded;
     private int playersVersion;
+    private boolean lineupUpdatedToday;
     private int lineupVersion;
     private LocalDateTime updatedAt;
 }

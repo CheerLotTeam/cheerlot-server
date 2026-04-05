@@ -141,6 +141,19 @@ public class TeamRepository {
         notionClient.updatePage(request);
     }
 
+    public void updateLineupUpdatedToday(String teamCode, boolean lineupUpdatedToday) {
+        String pageId = findPageIdByTeamCode(teamCode);
+        if (pageId == null) {
+            return;
+        }
+
+        Map<String, PageProperty> properties = new HashMap<>();
+        properties.put("is_lineup_updated_today", createCheckboxProperty(lineupUpdatedToday));
+
+        UpdatePageRequest request = new UpdatePageRequest(pageId, properties);
+        notionClient.updatePage(request);
+    }
+
     public void updateLastGameDate(String teamCode, LocalDate lastGameDate) {
         String pageId = findPageIdByTeamCode(teamCode);
         if (pageId == null) {
@@ -216,6 +229,7 @@ public class TeamRepository {
                 .lastGameDate(getDate(props, "last_game_date"))
                 .seasonEnded(getCheckbox(props, "is_season_ended"))
                 .playersVersion(getNumber(props, "players_version"))
+                .lineupUpdatedToday(getCheckbox(props, "is_lineup_updated_today"))
                 .lineupVersion(getNumber(props, "lineup_version"))
                 .updatedAt(getDateTime(props, "updated_at"))
                 .build();

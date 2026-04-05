@@ -8,5 +8,6 @@ public record TeamResponse(
         LocalDate lastGameDate,
         boolean hasTodayGame,
         String opponentTeamCode,
-        String starterPitcherName
+        String starterPitcherName,
+        boolean lineupUpdatedToday
 ) {}

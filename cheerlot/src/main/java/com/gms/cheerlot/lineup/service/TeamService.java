@@ -23,7 +23,8 @@ public class TeamService {
                 team.getLastGameDate(),
                 team.isHasTodayGame(),
                 team.getOpponentTeamCode(),
-                team.getStarterPitcherName()
+                team.getStarterPitcherName(),
+                team.isLineupUpdatedToday()
         );
     }
 
