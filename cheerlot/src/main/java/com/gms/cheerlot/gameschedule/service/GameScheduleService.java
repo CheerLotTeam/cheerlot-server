@@ -20,8 +20,8 @@ public class GameScheduleService {
         LocalDate today = LocalDate.now();
         List<TeamGameStatus> recentGames = List.of(
                 getTeamGameStatus(teamCode, today),
-                getTeamGameStatus(teamCode, today.minusDays(1)),
-                getTeamGameStatus(teamCode, today.minusDays(2))
+                getTeamGameStatus(teamCode, today.plusDays(1)),
+                getTeamGameStatus(teamCode, today.plusDays(2))
         );
         return new GameScheduleResponse(teamCode, recentGames);
     }
@@ -30,10 +30,10 @@ public class GameScheduleService {
         List<GameSchedule> schedules = cacheDataService.getGameSchedules(date);
 
         return schedules.stream()
-                .filter(g -> g.getHomeTeamCode().equals(teamCode) || g.getAwayTeamCode().equals(teamCode))
+                .filter(g -> g.getHomeTeamCode().equalsIgnoreCase(teamCode) || g.getAwayTeamCode().equalsIgnoreCase(teamCode))
                 .findFirst()
                 .map(game -> {
-                    boolean isHome = game.getHomeTeamCode().equals(teamCode);
+                    boolean isHome = game.getHomeTeamCode().equalsIgnoreCase(teamCode);
                     return new TeamGameStatus(
                             date,
                             true,
