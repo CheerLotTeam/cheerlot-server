@@ -8,16 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class GameScheduleService {
 
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
+
     private final CacheDataService cacheDataService;
 
     public GameScheduleResponse getRecentGames(String teamCode) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(KST);
         List<TeamGameStatus> recentGames = List.of(
                 getTeamGameStatus(teamCode, today),
                 getTeamGameStatus(teamCode, today.plusDays(1)),

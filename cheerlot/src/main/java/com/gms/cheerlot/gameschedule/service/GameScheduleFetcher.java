@@ -28,7 +28,7 @@ public class GameScheduleFetcher {
         fetchAndCacheAll();
     }
 
-    @Scheduled(cron = "0 1 0 * * *")
+    @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul")
     public void scheduledFetch() {
         log.info("스케줄 실행 - 경기 일정 갱신");
         fetchAndCacheAll();
