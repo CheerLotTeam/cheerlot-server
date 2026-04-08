@@ -30,10 +30,10 @@ public class GameScheduleService {
         List<GameSchedule> schedules = cacheDataService.getGameSchedules(date);
 
         return schedules.stream()
-                .filter(g -> g.getHomeTeamCode().equalsIgnoreCase(teamCode) || g.getAwayTeamCode().equalsIgnoreCase(teamCode))
+                .filter(g -> g.getHomeTeamCode().equals(teamCode) || g.getAwayTeamCode().equals(teamCode))
                 .findFirst()
                 .map(game -> {
-                    boolean isHome = game.getHomeTeamCode().equalsIgnoreCase(teamCode);
+                    boolean isHome = game.getHomeTeamCode().equals(teamCode);
                     return new TeamGameStatus(
                             date,
                             true,
