@@ -47,8 +47,6 @@ public class CacheLoader {
     public ResetResult reset() {
         List<Player> oldPlayers = loadOldPlayers();
 
-        redisTemplate.delete(List.of(KEY_TEAMS, KEY_PLAYERS, KEY_CHEERSONGS));
-
         List<Player> newPlayers = playerRepository.findAll();
         List<Team> teams = teamRepository.findAll();
         List<CheerSong> cheerSongs = cheerSongRepository.findAll();
@@ -56,6 +54,8 @@ public class CacheLoader {
         boolean versionChanged = incrementVersionsIfChanged(teams, oldPlayers, newPlayers);
 
         List<Team> teamsToCache = versionChanged ? teamRepository.findAll() : teams;
+
+        redisTemplate.delete(List.of(KEY_TEAMS, KEY_PLAYERS, KEY_CHEERSONGS));
 
         saveToRedis(KEY_TEAMS, teamsToCache);
         saveToRedis(KEY_PLAYERS, newPlayers);
