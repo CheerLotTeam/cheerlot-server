@@ -124,7 +124,7 @@ public class CacheLoader {
         }
 
         Map<String, Player> oldMap = oldPlayers.stream()
-                .collect(Collectors.toMap(Player::getPlayerCode, p -> p));
+                .collect(Collectors.toMap(Player::getPlayerCode, p -> p, (a, b) -> a));
 
         return newPlayers.stream().allMatch(np -> {
             Player op = oldMap.get(np.getPlayerCode());
