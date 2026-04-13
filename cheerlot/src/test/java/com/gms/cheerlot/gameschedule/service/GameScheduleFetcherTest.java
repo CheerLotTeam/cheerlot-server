@@ -6,6 +6,7 @@ import com.gms.cheerlot.gameschedule.domain.GameSchedule;
 import com.gms.cheerlot.gameschedule.dto.CrawlerGameScheduleResponse;
 import com.gms.cheerlot.gameschedule.dto.CrawlerGameScheduleResponse.DailySchedule;
 import com.gms.cheerlot.gameschedule.dto.CrawlerGameScheduleResponse.GameEntry;
+import com.gms.cheerlot.lineup.repository.TeamRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +36,9 @@ class GameScheduleFetcherTest {
 
     @Mock
     private CacheDataService cacheDataService;
+
+    @Mock
+    private TeamRepository teamRepository;
 
     @InjectMocks
     private GameScheduleFetcher gameScheduleFetcher;
